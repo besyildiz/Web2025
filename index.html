@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serbest Düşme Hareketi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Parametreler Girin ve Serbest Düşme Sonucunu Görüntüleyin</h1>
+        <form id="free-fall-form">
+            <label for="acceleration">Yerçekimi Kuvveti (m/s²):</label>
+            <input type="number" id="acceleration" required placeholder="Örneğin: 9.81"><br><br>
+
+            <label for="initial_velocity">İlk Hız (m/s):</label>
+            <input type="number" id="initial_velocity" required placeholder="Örneğin: 0"><br><br>
+
+            <button type="submit">Hesapla</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

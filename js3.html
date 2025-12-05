@@ -1,0 +1,23 @@
+<html>
+<head><script>
+function durum(d) 
+{
+var r;
+
+if(d==0) r="harici/kapali.png";
+if(d==1) r="harici/acik.png";
+document.getElementById("resmim").src=r;
+}
+
+</script></head>
+<body>
+
+<img id="resmim" src="harici/normal.png" />
+<p>
+<button type="button" onclick="durum(1)">Aç</button>
+<button type="button" onclick="durum(0)">Kapat</button>
+</p>
+
+</body>
+
+</html>
