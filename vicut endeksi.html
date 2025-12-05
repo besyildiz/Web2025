@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Hesaplayıcı</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .result {
+            margin-top: 30px;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result.success {
+            background: #d4edda;
+            border: 2px solid #c3e6cb;
+        }
+
+        .result.warning {
+            background: #fff3cd;
+            border: 2px solid #ffeaa7;
+        }
+
+        .result.danger {
+            background: #f8d7da;
+            border: 2px solid #f5c6cb;
+        }
+
+        .bmi-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .bmi-category {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .bmi-description {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .info-item h3 {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .info-item .value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏃‍♂️ BMI Hesaplayıcı</h1>
+            <p>Vücut Kitle Endeksinizi hesaplayın</p>
+        </div>
+
+        <form id="bmiForm">
+            <div class="form-group">
+                <label for="height">Boy (cm):</label>
+                <input type="number" id="height" placeholder="Örn: 175" required>
+            </div>
+
+            <div class="form-group">
+                <label for="weight">Kilo (kg):</label>
+                <input type="number" id="weight" placeholder="Örn: 70" required>
+            </div>
+
+            <button type="submit" class="calculate-btn">BMI Hesapla</button>
+        </form>
+
+        <div id="result" class="result">
+            <div class="bmi-value" id="bmiValue"></div>
+            <div class="bmi-category" id="bmiCategory"></div>
+            <div class="bmi-description" id="bmiDescription"></div>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <h3>Ideal Alt</h3>
+                    <div class="value">< 18.5</div>
+                </div>
+                <div class="info-item">
+                    <h3>Normal</h3>
+                    <div class="value">18.5-24.9</div>
+                </div>
+                <div class="info-item">
+                    <h3>Kilolu</h3>
+                    <div class="value">25-29.9</div>
+                </div>
+                <div class="info-item">
+                    <h3>Obez</h3>
+                    <div class="value">≥ 30</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('bmiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            
+            if (height && weight) {
+                // BMI = kg / (m)^2
+                const heightInMeters = height / 100;
+                const bmi = weight / (heightInMeters * heightInMeters);
+                
+                let category, description, className;
+                
+                if (bmi < 18.5) {
+                    category = "Zayıf";
+                    description = "Kilonuz idealin altında. Sağlıklı bir şekilde kilo almayı düşünün.";
+                    className = "warning";
+                } else if (bmi >= 18.5 && bmi < 25) {
+                    category = "Normal";
+                    description = "Tebrikler! Kilonuz ideal aralıkta.";
+                    className = "success";
+                } else if (bmi >= 25 && bmi < 30) {
+                    category = "Kilolu";
+                    description = "Kilonuz idealin üstünde. Sağlıklı beslenme ve egzersiz faydalı olabilir.";
+                    className = "warning";
+                } else {
+                    category = "Obez";
+                    description = "Kilonuz sağlık riski oluşturabilir. Bir uzmana danışmanız önerilir.";
+                    className = "danger";
+                }
+                
+                const resultDiv = document.getElementById('result');
+                document.getElementById('bmiValue').textContent = bmi.toFixed(1);
+                document.getElementById('bmiCategory').textContent = category;
+                document.getElementById('bmiDescription').textContent = description;
+                
+                resultDiv.className = 'result show ' + className;
+            }
+        });
+    </script>
+</body>
+</html>
