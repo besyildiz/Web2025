@@ -1,0 +1,137 @@
+ 
+<html>
+<head>
+ 
+<title>Form Elemanlarý - Ders Planý</title>
+<style>
+ body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
+ h1, h2, h3 { color: #2c3e50; }
+ section { margin-bottom: 40px; }
+ .example-box { border: 1px solid #ccc; padding: 20px; margin-top: 10px; border-radius: 8px; background: #f9f9f9; }
+ .screenshot { margin-top: 10px; padding: 10px; border: 1px dashed #666; background: #fff; }
+</style>
+</head>
+<body>
+<h1>Form Elemanlarý - Ders Planý</h1>
+<p>Bu ders planý; öðretmen, öðrenci ve geliþtiriciler için form elemanlarýný örneklerle ve uygulamalý etkinliklerle öðretmek amacýyla hazýrlanmýþtýr.</p>
+
+<h2>1. Giriþ  </h2>
+<p>• Form nedir? Kullaným amaçlarý nelerdir?<br>• Web üzerinde kullanýcýdan veri alma mantýðý<br>• GET ve POST kavramlarýna giriþ</p>
+
+<h2>2. Form Oluþturma  </h2>
+<section>
+<h3>Örnek Form:</h3>
+<div class="example-box">
+<form>
+<label>Adýnýz:</label>
+<input type="text" placeholder="Adýnýzý girin" />
+<br><br>
+<label>Þifre:</label>
+<input type="password" />
+<br><br>
+<button type="submit">Gönder</button>
+</form>
+</div>
+</section>
+
+<h2>3. Form Elemanlarý Detaylý Anlatým + Ekran Görüntüsü (200 dk)</h2>
+
+<section>
+<h3>3.7.3.1 &lt;input&gt; Etiketi</h3>
+<div class="example-box">
+<form>
+<input type="text" placeholder="Metin kutusu" /><br><br>
+<input type="number" placeholder="Sayý" /><br><br>
+<input type="date" /><br><br>
+<input type="color" />
+</form>
+</div>
+<div class="screenshot">Ekran görüntüsü: Yukarýdaki input türleri</div>
+</section>
+
+<section>
+<h3>3.7.3.2 &lt;button&gt; Etiketi</h3>
+<div class="example-box">
+<button>Standart Buton</button>
+<button type="submit">Gönder</button>
+</div>
+<div class="screenshot">Ekran görüntüsü: Farklý buton türleri</div>
+</section>
+
+<section>
+<h3>3.7.3.3 &lt;select&gt;, &lt;option&gt;, &lt;optgroup&gt;</h3>
+<div class="example-box">
+<select>
+ <optgroup label="Meyveler">
+   <option>Elma</option>
+   <option>Armut</option>
+ </optgroup>
+ <optgroup label="Sebzeler">
+   <option>Domates</option>
+   <option>Biber</option>
+ </optgroup>
+</select>
+</div>
+<div class="screenshot">Ekran görüntüsü: Seçim listesi</div>
+</section>
+
+<section>
+<h3>3.7.3.4 &lt;fieldset&gt; ve &lt;legend&gt;</h3>
+<div class="example-box">
+<fieldset>
+ <legend>Kiþisel Bilgiler</legend>
+ <label>Ad:</label> <input type="text"><br><br>
+ <label>Yaþ:</label> <input type="number">
+</fieldset>
+</div>
+<div class="screenshot">Ekran görüntüsü: fieldset - legend örneði</div>
+</section>
+
+<section>
+<h3>3.7.3.5 &lt;textarea&gt; Etiketi</h3>
+<div class="example-box">
+<textarea rows="4" cols="40">Metni buraya yazabilirsiniz...</textarea>
+</div>
+<div class="screenshot">Ekran görüntüsü: Çok satýrlý metin alaný</div>
+</section>
+
+<section>
+<h3>3.7.3.6 &lt;meter&gt; Etiketi</h3>
+<div class="example-box">
+<meter value="0.6">60%</meter>
+</div>
+<div class="screenshot">Ekran görüntüsü: meter elemaný</div>
+</section>
+
+<section>
+<h3>3.7.3.7 &lt;progress&gt; Etiketi</h3>
+<div class="example-box">
+<progress value="30" max="100"></progress>
+</div>
+<div class="screenshot">Ekran görüntüsü: progress çubuðu</div>
+</section>
+
+<h2>4. Uygulama Çalýþmasý  </h2>
+<p>Öðrencilerden bir "Kayýt Formu" tasarlamalarý istenir.</p>
+<ul>
+ <li>Ad Soyad</li>
+ <li>Email</li>
+ <li>Doðum Tarihi</li>
+ <li>Cinsiyet (select)</li>
+ <li>Kendini deðerlendir (meter)</li>
+ <li>Form tamamlama durumu (progress)</li>
+</ul>
+
+<h2>5. Ödev</h2>
+<p>"Hastane Randevu Formu" tasarla:<br>
+• Doktor seçimi<br>
+• Bölüm seçimi<br>
+• Þikayet metin alaný<br>
+• Randevu tarihi<br>
+• Onay butonu
+</p>
+
+ 
+
+</body>
+</html>
