@@ -1,1 +1,1 @@
-Web tabanlı uygulama geliştirme dersinde yapılan çalımaları yayımlıyorum
+Web tabanlı uygulama geliştirme dersinde yapılan çalışmaları yayımlıyorum
