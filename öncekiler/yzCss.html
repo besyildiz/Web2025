@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Box Shadow Örnekleri</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 40px;
+        }
+
+        .koleksiyon {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .kutu {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .baslik {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Temel Gölge */
+        .temel {
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Hafif Yumuşak Gölge */
+        .hafif-golge {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Kart Efekti */
+        .kart {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hover Efekti */
+        .kart:hover {
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+        }
+
+        /* İç Gölge */
+        .ic-golge {
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Çok Katmanlı Gölge */
+        .derinlikli {
+            box-shadow: 
+                0 1px 3px rgba(0, 0, 0, 0.12),
+                0 1px 2px rgba(0, 0, 0, 0.24);
+        }
+
+        /* Neon Efekti */
+        .neon {
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        /* Soft Glow */
+        .soft-glow {
+            box-shadow: 0 0 15px rgba(255, 182, 193, 0.3);
+        }
+
+        /* Shadow Alt */
+        .shadow-alt {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* No Shadow */
+        .no-shadow {
+            box-shadow: none;
+            border: 2px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CSS Box Shadow Örnekleri</h1>
+        
+        <div class="koleksiyon">
+            <div>
+                <div class="kutu temel">Temel Gölge</div>
+                <p class="baslik">5px 5px 10px rgba(0, 0, 0, 0.3)</p>
+            </div>
+            
+            <div>
+                <div class="kutu hafif-golge">Hafif Yumuşak</div>
+                <p class="baslik">0 2px 4px rgba(0, 0, 0, 0.1)</p>
+            </div>
+            
+            <div>
+                <div class="kutu kart">Hover'ı Dene</div>
+                <p class="baslik">Hover efekti ile derinlik</p>
+            </div>
+            
+            <div>
+                <div class="kutu ic-golge">İç Gölge</div>
+                <p class="baslik">inset 0 2px 4px rgba(0, 0, 0, 0.1)</p>
+            </div>
+            
+            <div>
+                <div class="kutu derinlikli">Çok Katmanlı</div>
+                <p class="baslik">2 katmanlı gölge efekti</p>
+            </div>
+            
+            <div>
+                <div class="kutu neon">Neon Efekti</div>
+                <p class="baslik">0 0 20px rgba(0, 255, 255, 0.5)</p>
+            </div>
+            
+            <div>
+                <div class="kutu soft-glow">Soft Glow</div>
+                <p class="baslik">Pastel parlama efekti</p>
+            </div>
+            
+            <div>
+                <div class="kutu shadow-alt">Shadow Alt</div>
+                <p class="baslik">0 10px 20px rgba(0, 0, 0, 0.15)</p>
+            </div>
+            
+            <div>
+                <div class="kutu no-shadow">No Shadow</div>
+                <p class="baslik">Gölgesiz border</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // İnteraktif efekt için JavaScript
+        document.querySelectorAll('.kutu').forEach(kutu => {
+            kutu.addEventListener('click', function() {
+                // Tıklanan kutuyu geçici olarak büyüt
+                this.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>

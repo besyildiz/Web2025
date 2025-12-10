@@ -1,0 +1,300 @@
+/shooting_game.html
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atış Simülasyonu</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Arial, sans-serif;
+        }
+        
+        #gameContainer {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        #gameCanvas {
+            border: 3px solid #333;
+            border-radius: 10px;
+            cursor: crosshair;
+            display: block;
+        }
+        
+        .gameInfo {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .score {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .highScore {
+            color: #e74c3c;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <h1>🎯 Atış Simülasyonu</h1>
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div class="gameInfo">
+            <div class="score">Skor: <span id="score">0</span></div>
+            <button id="resetBtn">Yeniden Başlat</button>
+            <div class="score highScore">En Yüksek Skor: <span id="highScore">0</span></div>
+        </div>
+    </div>
+
+    <script>
+        class ShootingSimulation {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.scoreElement = document.getElementById('score');
+                this.highScoreElement = document.getElementById('highScore');
+                this.resetBtn = document.getElementById('resetBtn');
+                
+                this.bullets = [];
+                this.target = { x: 400, y: 100, radius: 30 };
+                this.score = 0;
+                this.highScore = parseInt(localStorage.getItem('highScore') || '0');
+                this.mouse = { x: 0, y: 0 };
+                this.particles = [];
+                
+                this.highScoreElement.textContent = this.highScore;
+                
+                this.canvas.addEventListener('click', (e) => this.shoot(e));
+                this.canvas.addEventListener('mousemove', (e) => this.updateMouse(e));
+                this.resetBtn.addEventListener('click', () => this.reset());
+                
+                this.animate();
+            }
+            
+            updateMouse(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                this.mouse.x = e.clientX - rect.left;
+                this.mouse.y = e.clientY - rect.top;
+            }
+            
+            shoot(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const clickY = e.clientY - rect.top;
+                
+                const angle = Math.atan2(clickY - this.canvas.height, clickX - this.canvas.width / 2);
+                const speed = 15;
+                
+                this.bullets.push({
+                    x: this.canvas.width / 2,
+                    y: this.canvas.height,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    trail: []
+                });
+                
+                // Ateş etme efekti
+                this.createMuzzleFlash(this.canvas.width / 2, this.canvas.height);
+            }
+            
+            createMuzzleFlash(x, y) {
+                for (let i = 0; i < 10; i++) {
+                    this.particles.push({
+                        x: x,
+                        y: y,
+                        vx: (Math.random() - 0.5) * 8,
+                        vy: -Math.random() * 8,
+                        life: 1,
+                        color: `hsl(${Math.random() * 60 + 10}, 100%, 50%)`
+                    });
+                }
+            }
+            
+            createHitEffect(x, y) {
+                for (let i = 0; i < 20; i++) {
+                    const angle = (Math.PI * 2 / 20) * i;
+                    this.particles.push({
+                        x: x,
+                        y: y,
+                        vx: Math.cos(angle) * 5,
+                        vy: Math.sin(angle) * 5,
+                        life: 1,
+                        color: `hsl(${Math.random() * 360}, 100%, 50%)`
+                    });
+                }
+            }
+            
+            update() {
+                // Mermileri güncelle
+                this.bullets = this.bullets.filter(bullet => {
+                    bullet.x += bullet.vx;
+                    bullet.y += bullet.vy;
+                    
+                    bullet.trail.push({ x: bullet.x, y: bullet.y });
+                    if (bullet.trail.length > 20) bullet.trail.shift();
+                    
+                    const dist = Math.sqrt(
+                        Math.pow(bullet.x - this.target.x, 2) + 
+                        Math.pow(bullet.y - this.target.y, 2)
+                    );
+                    
+                    if (dist < this.target.radius) {
+                        this.score++;
+                        this.scoreElement.textContent = this.score;
+                        
+                        if (this.score > this.highScore) {
+                            this.highScore = this.score;
+                            this.highScoreElement.textContent = this.highScore;
+                            localStorage.setItem('highScore', this.highScore.toString());
+                        }
+                        
+                        this.createHitEffect(this.target.x, this.target.y);
+                        this.randomizeTarget();
+                        return false;
+                    }
+                    
+                    return bullet.x > 0 && bullet.x < this.canvas.width && 
+                           bullet.y > 0 && bullet.y < this.canvas.height;
+                });
+                
+                // Parçacıkları güncelle
+                this.particles = this.particles.filter(particle => {
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+                    particle.vy += 0.3; // Yerçekimi
+                    particle.life -= 0.02;
+                    return particle.life > 0;
+                });
+            }
+            
+            randomizeTarget() {
+                this.target.x = Math.random() * (this.canvas.width - 100) + 50;
+                this.target.y = Math.random() * 200 + 50;
+            }
+            
+            draw() {
+                // Arka plan gradient
+                const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+                gradient.addColorStop(0, '#87CEEB');
+                gradient.addColorStop(1, '#98D8C8');
+                this.ctx.fillStyle = gradient;
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Hedef
+                this.ctx.beginPath();
+                this.ctx.arc(this.target.x, this.target.y, this.target.radius, 0, Math.PI * 2);
+                this.ctx.fillStyle = '#FF6B6B';
+                this.ctx.fill();
+                this.ctx.strokeStyle = '#FFF';
+                this.ctx.lineWidth = 3;
+                this.ctx.stroke();
+                
+                // Hedef merkezi
+                this.ctx.beginPath();
+                this.ctx.arc(this.target.x, this.target.y, 10, 0, Math.PI * 2);
+                this.ctx.fillStyle = '#FFF';
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.arc(this.target.x, this.target.y, 5, 0, Math.PI * 2);
+                this.ctx.fillStyle = '#FF6B6B';
+                this.ctx.fill();
+                
+                // Mermiler ve izleri
+                this.bullets.forEach(bullet => {
+                    bullet.trail.forEach((point, index) => {
+                        this.ctx.beginPath();
+                        this.ctx.arc(point.x, point.y, index * 0.3, 0, Math.PI * 2);
+                        this.ctx.fillStyle = `rgba(255, 215, 0, ${index * 0.05})`;
+                        this.ctx.fill();
+                    });
+                    
+                    this.ctx.beginPath();
+                    this.ctx.arc(bullet.x, bullet.y, 5, 0, Math.PI * 2);
+                    this.ctx.fillStyle = '#FFD700';
+                    this.ctx.fill();
+                });
+                
+                // Parçacıklar
+                this.particles.forEach(particle => {
+                    this.ctx.globalAlpha = particle.life;
+                    this.ctx.fillStyle = particle.color;
+                    this.ctx.fillRect(particle.x - 2, particle.y - 2, 4, 4);
+                });
+                this.ctx.globalAlpha = 1;
+                
+                // Nişangah
+                this.ctx.strokeStyle = '#333';
+                this.ctx.lineWidth = 2;
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.mouse.x - 15, this.mouse.y);
+                this.ctx.lineTo(this.mouse.x + 15, this.mouse.y);
+                this.ctx.moveTo(this.mouse.x, this.mouse.y - 15);
+                this.ctx.lineTo(this.mouse.x, this.mouse.y + 15);
+                this.ctx.stroke();
+                
+                // Ateş pozisyonu (silah)
+                this.ctx.fillStyle = '#4A4A4A';
+                this.ctx.fillRect(this.canvas.width / 2 - 30, this.canvas.height - 20, 60, 20);
+                
+                // Silah namlusu
+                this.ctx.fillStyle = '#333';
+                this.ctx.fillRect(this.canvas.width / 2 - 5, this.canvas.height - 30, 10, 15);
+            }
+            
+            reset() {
+                this.score = 0;
+                this.scoreElement.textContent = this.score;
+                this.bullets = [];
+                this.particles = [];
+                this.randomizeTarget();
+            }
+            
+            animate() {
+                this.update();
+                this.draw();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+        
+        // Simülasyonu başlat
+        const simulation = new ShootingSimulation();
+    </script>
+</body>
+</html>
